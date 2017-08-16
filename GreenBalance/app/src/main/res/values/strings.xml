@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Green Balance</string>
+
+    <string name="login_description">Schön dass du hier bist und vegan leben willst oder sogar schon vegan lebst.\n\nBevor du alles nutzen kannst, benötigten wir noch ein paar Daten von dir.</string>
+    <string name="login_name">Name:</string>
+    <string name="login_email">Email:</string>
+    <string name="login_date_since_vegan">Datum, seit dem Ich vegan lebe:</string>
 </resources>
