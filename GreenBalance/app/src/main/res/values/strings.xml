@@ -5,4 +5,8 @@
     <string name="login_name">Name:</string>
     <string name="login_email">Email:</string>
     <string name="login_date_since_vegan">Datum, seit dem Ich vegan lebe:</string>
+
+    <string name="toast_no_name">Es wurde kein Name angegeben.</string>
+    <string name="toast_no_email">Es wurde keine valide Email angegeben.</string>
+    <string name="toast_no_date_since_vegan">Es wurde kein Datum angegeben.</string>
 </resources>

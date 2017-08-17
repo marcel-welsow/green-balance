@@ -1,12 +1,21 @@
 package com.mojodictive.greenbalance;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.mojodictive.greenbalance.crud.ICRUDOperationsApplication;
+import com.mojodictive.greenbalance.model.IUser;
+import com.mojodictive.greenbalance.model.User;
 
 import java.util.Calendar;
 
@@ -16,7 +25,14 @@ public class LoginActivity extends AppCompatActivity implements DatePickerDialog
 
     private TextView dateTextView;
 
+    private EditText nameEditText;
+    private EditText emailEditText;
+
+    private FloatingActionButton saveUserFloatingActionButton;
+
     private Calendar calendar = Calendar.getInstance();
+
+    private ICRUDOperationsApplication crudOperations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,14 +41,32 @@ public class LoginActivity extends AppCompatActivity implements DatePickerDialog
 
         setContentView(R.layout.activity_login);
 
-        initViewElements();
-        initOnClickListener();
+        crudOperations = ((ICRUDOperationsApplication) getApplication()).getCrudOperations();
+
+        crudOperations.readUser(new ICRUDOperationsApplication.CallbackFunction<IUser>() {
+            @Override
+            public void process(IUser user) {
+
+                if (user == null) {
+                    initViewElements();
+                    initOnClickListener();
+                } else {
+                    goToDashboardActivity();
+                }
+            }
+        });
     }
 
     private void initViewElements() {
 
         calenderImageView = (ImageView) findViewById(R.id.button_login_calender);
+
         dateTextView = (TextView) findViewById(R.id.textview_login_date);
+
+        nameEditText = (EditText) findViewById(R.id.edittext_name);
+        emailEditText = (EditText) findViewById(R.id.edittext_email);
+
+        saveUserFloatingActionButton = (FloatingActionButton) findViewById(R.id.button_save_user);
     }
 
     private void initOnClickListener() {
@@ -41,6 +75,12 @@ public class LoginActivity extends AppCompatActivity implements DatePickerDialog
             @Override
             public void onClick(View v) {
                 showCalenderDialog();
+            }
+        });
+        saveUserFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveUserData();
             }
         });
     }
@@ -87,5 +127,60 @@ public class LoginActivity extends AppCompatActivity implements DatePickerDialog
         }
 
         return "Januar";
+    }
+
+    private void saveUserData() {
+
+        if (validateUserData()) {
+
+            IUser user = new User();
+            user.setName(nameEditText.getText().toString());
+            user.setEmail(emailEditText.getText().toString());
+            user.setDate(calendar.getTimeInMillis() / 1000);
+
+            crudOperations.createUser(user, new ICRUDOperationsApplication.CallbackFunction<IUser>() {
+                @Override
+                public void process(IUser result) {
+                    goToDashboardActivity();
+                }
+            });
+        }
+    }
+
+    private boolean validateUserData() {
+
+        String name = nameEditText.getText().toString();
+
+        if (name.length() == 0) {
+            Toast.makeText(LoginActivity.this, R.string.toast_no_name, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        String email = emailEditText.getText().toString();
+
+        if (isEmailValid(email)) {
+            Toast.makeText(LoginActivity.this, R.string.toast_no_email, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        String dateSinceVegan = dateTextView.getText().toString();
+
+        if (dateSinceVegan.length() == 0) {
+            Toast.makeText(LoginActivity.this, R.string.toast_no_date_since_vegan, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isEmailValid(String email) {
+        return !Patterns.EMAIL_ADDRESS.matcher(email).matches() && email.length() > 0;
+    }
+
+    private void goToDashboardActivity() {
+
+        Intent dashboardIntent = new Intent(LoginActivity.this, DashboardActivity.class);
+
+        startActivity(dashboardIntent);
     }
 }
