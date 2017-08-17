@@ -9,6 +9,8 @@ public interface ICRUDOperationsApplication {
         public void process(T result);
     }
 
+    public ICRUDOperationsApplication getCrudOperations();
+
     public void readUser(CallbackFunction<IUser> callbackFunction);
 
     public void createUser(IUser user, CallbackFunction<IUser> callbackFunction);

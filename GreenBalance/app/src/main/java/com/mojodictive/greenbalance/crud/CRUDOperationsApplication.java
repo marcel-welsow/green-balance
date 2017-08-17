@@ -17,6 +17,10 @@ public class CRUDOperationsApplication extends Application implements ICRUDOpera
         crudOperations = new CRUDOperations(this);
     }
 
+    public ICRUDOperationsApplication getCrudOperations() {
+        return this;
+    }
+
     @Override
     public void readUser(final CallbackFunction<IUser> callbackFunction) {
 

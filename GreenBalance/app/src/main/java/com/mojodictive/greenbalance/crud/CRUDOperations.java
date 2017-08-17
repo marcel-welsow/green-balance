@@ -24,7 +24,7 @@ public class CRUDOperations implements ICRUDOperations {
         if (database.getVersion() == 0) {
 
             database.setVersion(1);
-            database.execSQL("CREATE TABLE" + TABLE + " (ID INTEGER PRIMARY KEY, " + NAME + " TEXT, " + EMAIL + " TEXT, " + DATE + " INTEGER)");
+            database.execSQL("CREATE TABLE " + TABLE + " (ID INTEGER PRIMARY KEY, " + NAME + " TEXT, " + EMAIL + " TEXT, " + DATE + " INTEGER)");
         }
     }
 
